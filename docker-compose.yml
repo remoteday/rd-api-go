@@ -1,0 +1,15 @@
+  
+version: '3.7'
+services:
+  epia-db:
+    image: postgres:9.6.11-alpine
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_volume:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: superuser
+      POSTGRES_PASSWORD: supersecret
+      POSTGRES_DB: rddb
+volumes:
+  db_volume: {}

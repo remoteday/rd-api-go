@@ -1,0 +1,24 @@
+definitions:
+  healthcheck.HealthCheck:
+    properties:
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /_health:
+    get:
+      consumes:
+      - application/json
+      description: application health check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/healthcheck.HealthCheck'
+      summary: Healthcheck
+swagger: "2.0"
