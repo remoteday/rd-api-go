@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"flag"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,9 +11,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
+	"github.com/remoteday/rd-api-go/cmd/api/routes"
 	"github.com/remoteday/rd-api-go/src/config"
-	web "github.com/remoteday/rd-api-go/src/platform/adapters/web"
-	_ "github.com/remoteday/rd-api-go/src/platform/docs"
+	"github.com/remoteday/rd-api-go/src/db"
+	_ "github.com/remoteday/rd-api-go/src/docs"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -30,11 +29,7 @@ func main() {
 
 	flag.Parse()
 
-	var cfg struct {
-		Web  config.Web
-		DB   config.Database
-		Auth config.Auth
-	}
+	var cfg config.AppConfig
 
 	if err := envconfig.Process("rd-api", &cfg); err != nil {
 		log.Fatalf("main : Parsing Config : %v", err)
@@ -44,27 +39,50 @@ func main() {
 	defer log.Infoln("main : Completed")
 
 	// Configure DB
-	connection := fmt.Sprintf("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable", cfg.DB.DBHost, cfg.DB.DBPort, cfg.DB.DBUser, cfg.DB.DBPass, cfg.DB.DBName)
-
-	dbConn, err := sql.Open("postgres", connection)
-
+	app, err := InitializeApp(cfg)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
+		os.Exit(1)
 	}
 
-	err = dbConn.Ping()
+	err = app.DbConn.Ping()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
 	defer func() {
-		err := dbConn.Close()
+		err := app.DbConn.Close()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
+
+	// Start seed
+	switch flag.Arg(0) {
+	case "with-migrate":
+		if err := db.Migrate(app.DbConn); err != nil {
+			log.Println("error applying migrations", err)
+			os.Exit(1)
+		}
+		log.Println("Migrations complete")
+	case "migrate":
+		if err := db.Migrate(app.DbConn); err != nil {
+			log.Println("error applying migrations", err)
+			os.Exit(1)
+		}
+		log.Println("Migrations complete")
+		return
+
+	case "seed":
+		if err := db.Seed(app.DbConn); err != nil {
+			log.Println("error seeding database", err)
+			os.Exit(1)
+		}
+		log.Println("Seed data complete")
+		return
+
+	}
 
 	// Start Debug Service
 
@@ -87,7 +105,7 @@ func main() {
 	}()
 
 	// Start API Service
-	r := web.NewWebAdapter(dbConn, cfg.DB, cfg.Auth)
+	r := routes.NewWebAdapter(app)
 
 	api := http.Server{
 		Addr:           cfg.Web.APIHost + ":" + cfg.Web.APIPort,
@@ -103,7 +121,7 @@ func main() {
 
 	// Start the service listening for requests.
 	go func() {
-		log.Infof("main : API Listening %s", cfg.Web.APIHost+":"+cfg.Web.APIPort)
+		log.Infof("main : API Listening http://%s", cfg.Web.APIHost+":"+cfg.Web.APIPort)
 		serverErrors <- api.ListenAndServe()
 	}()
 

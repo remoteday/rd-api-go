@@ -1,12 +1,16 @@
+basePath: /
 definitions:
   healthcheck.HealthCheck:
     properties:
       status:
         type: string
     type: object
+host: 0.0.0.0:3000
 info:
   contact: {}
   license: {}
+  title: API
+  version: "1.0"
 paths:
   /_health:
     get:

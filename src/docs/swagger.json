@@ -1,9 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
+        "title": "API",
         "contact": {},
-        "license": {}
+        "license": {},
+        "version": "1.0"
     },
+    "host": "0.0.0.0:3000",
+    "basePath": "/",
     "paths": {
         "/_health": {
             "get": {

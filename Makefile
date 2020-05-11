@@ -23,7 +23,7 @@ coverage.coveralls:
 	./scripts/coverage.sh --coveralls
 
 doc-gen:
-	swag init -o ./src/platform/docs -g ./cmd/api/routes/route.go
+	swag init -o ./src/docs -g ./cmd/api/routes/route.go
 
 tidy:
 	go mod tidy
@@ -42,4 +42,14 @@ server:
 dev:
 	reflex -s -r '\.go$'' go run ./cmd/api
 
-.PHONY: server
+server-with-migrate:
+	go run ./cmd/api with-migrate
+
+migrate:
+	go run ./cmd/api migrate
+
+seed:
+	go run ./cmd/api seed
+
+wire:
+	wire gen ./cmd/api

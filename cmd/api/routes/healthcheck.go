@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/remoteday/rd-api-go/src/healthcheck"
+	"github.com/remoteday/rd-api-go/src/platform"
 )
 
 // NewHealthcheckHTTPHandler -
@@ -17,8 +17,10 @@ import (
 // @Produce  json
 // @Success 200 {object} healthcheck.HealthCheck
 // @Router /_health [get]
-func NewHealthcheckHTTPHandler(r *mux.Router, dbConn *sql.DB) {
-	handler := &Handler{}
+func NewHealthcheckHTTPHandler(r *mux.Router, app platform.App) {
+	handler := &Handler{
+		App: app,
+	}
 	r.HandleFunc("/_health", handler.Healthcheck).Methods("GET")
 	r.HandleFunc("/", handler.Healthcheck).Methods("GET")
 }

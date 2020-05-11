@@ -2,6 +2,12 @@ package config
 
 import "time"
 
+type AppConfig struct {
+	Web  Web
+	DB   Database
+	Auth Auth
+}
+
 // Auth -
 type Auth struct {
 	Auth0ClientID     string `envconfig:"AUTH0_CLIENT_ID"`
