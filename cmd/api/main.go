@@ -8,17 +8,33 @@ import (
 	"os/signal"
 	"syscall"
 
+	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	_ "github.com/lib/pq"
-	"github.com/remoteday/rd-api-go/cmd/api/routes"
 	"github.com/remoteday/rd-api-go/src/config"
 	"github.com/remoteday/rd-api-go/src/db"
-	_ "github.com/remoteday/rd-api-go/src/docs"
+	"github.com/remoteday/rd-api-go/src/routes"
 	log "github.com/sirupsen/logrus"
 )
 
 var build = "develop"
+
+func init() {
+	// Log as JSON instead of the default ASCII formatter.
+	log.SetFormatter(&log.JSONFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.InfoLevel)
+}
+
+// @title API
+// @version 1.0
+// @host 0.0.0.0:3000
+// @BasePath /
 
 func main() {
 
@@ -62,24 +78,24 @@ func main() {
 	switch flag.Arg(0) {
 	case "with-migrate":
 		if err := db.Migrate(app.DbConn); err != nil {
-			log.Println("error applying migrations", err)
+			log.Errorln("error applying migrations", err)
 			os.Exit(1)
 		}
-		log.Println("Migrations complete")
+		log.Info("Migrations complete")
 	case "migrate":
 		if err := db.Migrate(app.DbConn); err != nil {
-			log.Println("error applying migrations", err)
+			log.Errorln("error applying migrations", err)
 			os.Exit(1)
 		}
-		log.Println("Migrations complete")
+		log.Info("Migrations complete")
 		return
 
 	case "seed":
 		if err := db.Seed(app.DbConn); err != nil {
-			log.Println("error seeding database", err)
+			log.Errorln("error seeding database", err)
 			os.Exit(1)
 		}
-		log.Println("Seed data complete")
+		log.Info("Seed data complete")
 		return
 
 	}
