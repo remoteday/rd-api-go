@@ -2,11 +2,14 @@ package team
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
+	"github.com/remoteday/rd-api-go/src/common"
 )
 
 // Repository -
@@ -21,52 +24,30 @@ func NewTeamRepository(dbConn *sqlx.DB) Repository {
 	}
 }
 
-func (r *Repository) fetch(ctx context.Context, query string, args ...interface{}) ([]Team, error) {
-	rows, err := r.DbConn.QueryContext(ctx, query, args...)
-
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	result := make([]Team, 0)
-	for rows.Next() {
-		t := Team{}
-		err = rows.Scan(&t.ID, &t.Name, &t.Status, &t.CreatedAt, &t.UpdatedAt)
-
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, t)
-	}
-
-	return result, nil
-}
-
 // FindByID -
 func (r *Repository) FindByID(ctx context.Context, ID uuid.UUID) (Team, error) {
 	query := "SELECT * FROM teams WHERE id = $1"
 
-	row := r.DbConn.QueryRowContext(ctx, query, ID)
-
 	t := Team{}
-	err := row.Scan(&t.ID, &t.Name, &t.Status, &t.CreatedAt, &t.UpdatedAt)
 
-	if err != nil {
-		return Team{}, err
+	if err := r.DbConn.GetContext(ctx, &t, query, ID); err != nil {
+		if err == sql.ErrNoRows {
+			return Team{}, common.ErrNotFound
+		}
+		return Team{}, errors.Wrap(err, "selecting single team")
 	}
+
 	return t, nil
 }
 
 // FindAll -
 func (r *Repository) FindAll(ctx context.Context) ([]Team, error) {
 	query := "SELECT * FROM teams WHERE status = 'active'"
-	res, err := r.fetch(ctx, query)
-
-	if err != nil {
-		return nil, err
+	teams := []Team{}
+	if err := r.DbConn.SelectContext(ctx, &teams, query); err != nil {
+		return nil, errors.Wrap(err, "selecting teams")
 	}
-
-	return res, nil
+	return teams, nil
 }
 
 // Create -
@@ -87,13 +68,13 @@ func (r *Repository) Create(ctx context.Context, team Team) (Team, error) {
 	rows, err := r.DbConn.QueryContext(ctx, query, payload.Name, payload.Status, payload.CreatedAt, payload.UpdatedAt)
 
 	if err != nil {
-		return Team{}, err
+		return Team{}, errors.Wrap(err, "updating a team")
 	}
 
 	for rows.Next() {
 		err = rows.Scan(&lastInsertID)
 		if err != nil {
-			return Team{}, err
+			return Team{}, errors.Wrap(err, "updating a team - no affected teams")
 		}
 	}
 
@@ -132,7 +113,9 @@ func (r *Repository) Update(ctx context.Context, ID uuid.UUID, team Team) (Team,
 func (r *Repository) Delete(ctx context.Context, ID uuid.UUID) error {
 	const query = `UPDATE teams SET "status" = 'deleted' WHERE id = $1`
 
-	_, err := r.DbConn.ExecContext(ctx, query, ID)
+	if _, err := r.DbConn.ExecContext(ctx, query, ID); err != nil {
+		return errors.Wrapf(err, "deleting team %s", ID)
+	}
 
-	return err
+	return nil
 }

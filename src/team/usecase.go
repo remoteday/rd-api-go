@@ -39,7 +39,7 @@ func (u *UseCase) Create(ctx context.Context, team Team) (Team, error) {
 func (u *UseCase) Update(ctx context.Context, ID uuid.UUID, team Team) (Team, error) {
 	t, err := u.FindByID(ctx, ID)
 	if err != nil {
-		return Team{}, common.Errors["ErrNotFound"]
+		return Team{}, common.ErrNotFound
 	}
 
 	t.Name = team.Name

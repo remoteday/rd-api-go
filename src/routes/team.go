@@ -26,17 +26,19 @@ func NewTeamHTTPHandler(r *gin.Engine, app platform.App) {
 // TODO: use dependency injection
 func (h *Handler) get(c *gin.Context) {
 	ctx := context.Background()
-	usecase := h.App.Usecases.Team
 
 	id, err := uuid.Parse(c.Param("id"))
+
 	if err != nil {
-		fmt.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error(), "status": http.StatusBadRequest})
+		return
 	}
 
-	response, err := usecase.FindByID(ctx, id)
+	response, err := h.App.Usecases.Team.FindByID(ctx, id)
 
 	if err != nil {
-		fmt.Print(err)
+		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found", "status": http.StatusNotFound})
+		return
 	}
 
 	c.JSON(http.StatusOK, team.ToTeamDTO(response))
@@ -87,8 +89,6 @@ func (h *Handler) replace(c *gin.Context) {
 	}
 
 	response, err := h.App.Usecases.Team.Update(ctx, id, team.ToTeam(teamDto))
-
-	fmt.Println("responseresponseresponse", response)
 
 	c.JSON(http.StatusOK, team.ToTeamDTO(response))
 }

@@ -15,6 +15,12 @@ type DTO struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// CreateDTO -
 type CreateDTO struct {
+	Name string `json:"name"`
+}
+
+// UpdateDTO -
+type UpdateDTO struct {
 	Name string `json:"name"`
 }

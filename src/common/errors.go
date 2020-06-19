@@ -3,12 +3,6 @@ package common
 import "errors"
 
 var (
-	// Errors - platform errors
-	Errors = map[string]error{
-		"ErrNotFound": errors.New("not found"),
-	}
+	// ErrNotFound - not found
+	ErrNotFound = errors.New("Not Found")
 )
-
-type TestLancaster struct {
-	Foo string
-}
