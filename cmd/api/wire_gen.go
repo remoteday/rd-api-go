@@ -9,6 +9,7 @@ import (
 	"github.com/remoteday/rd-api-go/src/config"
 	"github.com/remoteday/rd-api-go/src/db"
 	"github.com/remoteday/rd-api-go/src/platform"
+	"github.com/remoteday/rd-api-go/src/room"
 	"github.com/remoteday/rd-api-go/src/team"
 )
 
@@ -25,6 +26,8 @@ func InitializeApp(config2 config.AppConfig) (platform.App, error) {
 	}
 	repository := team.NewTeamRepository(sqlxDB)
 	useCase := team.NewTeamUseCase(repository)
-	app := platform.NewApp(sqlxDB, repository, useCase)
+	roomRepository := room.NewRoomRepository(sqlxDB)
+	roomUseCase := room.NewRoomUseCase(roomRepository)
+	app := platform.NewApp(sqlxDB, repository, useCase, roomRepository, roomUseCase)
 	return app, nil
 }
