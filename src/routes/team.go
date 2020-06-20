@@ -11,9 +11,14 @@ import (
 	"github.com/remoteday/rd-api-go/src/team"
 )
 
+// HandlerTeam
+type HandlerTeam struct {
+	App platform.App
+}
+
 // NewTeamHTTPHandler -
 func NewTeamHTTPHandler(r *gin.Engine, app platform.App) {
-	handler := &Handler{
+	handler := &HandlerTeam{
 		App: app,
 	}
 	r.GET("/teams/:id", handler.get)
@@ -23,8 +28,7 @@ func NewTeamHTTPHandler(r *gin.Engine, app platform.App) {
 	r.DELETE("/teams/:id", handler.delete)
 }
 
-// TODO: use dependency injection
-func (h *Handler) get(c *gin.Context) {
+func (h *HandlerTeam) get(c *gin.Context) {
 	ctx := context.Background()
 
 	id, err := uuid.Parse(c.Param("id"))
@@ -44,7 +48,7 @@ func (h *Handler) get(c *gin.Context) {
 	c.JSON(http.StatusOK, team.ToTeamDTO(response))
 }
 
-func (h *Handler) list(c *gin.Context) {
+func (h *HandlerTeam) list(c *gin.Context) {
 	ctx := context.Background()
 	usecase := h.App.Usecases.Team
 
@@ -57,7 +61,7 @@ func (h *Handler) list(c *gin.Context) {
 	c.JSON(http.StatusOK, team.ToTeamDTOs(response))
 }
 
-func (h *Handler) create(c *gin.Context) {
+func (h *HandlerTeam) create(c *gin.Context) {
 	ctx := context.Background()
 	var teamDto team.DTO
 
@@ -72,7 +76,7 @@ func (h *Handler) create(c *gin.Context) {
 	c.JSON(http.StatusCreated, team.ToTeamDTO(response))
 }
 
-func (h *Handler) replace(c *gin.Context) {
+func (h *HandlerTeam) replace(c *gin.Context) {
 	ctx := context.Background()
 
 	id, err := uuid.Parse(c.Param("id"))
@@ -93,7 +97,7 @@ func (h *Handler) replace(c *gin.Context) {
 	c.JSON(http.StatusOK, team.ToTeamDTO(response))
 }
 
-func (h *Handler) delete(c *gin.Context) {
+func (h *HandlerTeam) delete(c *gin.Context) {
 	ctx := context.Background()
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

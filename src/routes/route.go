@@ -7,11 +7,6 @@ import (
 	"github.com/remoteday/rd-api-go/src/platform"
 )
 
-// Handler represent the httphandler for healthcheck
-type Handler struct {
-	App platform.App
-}
-
 // NewWebAdapter -
 func NewWebAdapter(app platform.App) http.Handler {
 
@@ -20,6 +15,8 @@ func NewWebAdapter(app platform.App) http.Handler {
 	NewHealthcheckHTTPHandler(r, app)
 
 	NewTeamHTTPHandler(r, app)
+
+	NewRoomHTTPHandler(r, app)
 
 	return r
 }

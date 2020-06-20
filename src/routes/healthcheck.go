@@ -5,9 +5,14 @@ import (
 	"github.com/remoteday/rd-api-go/src/platform"
 )
 
+// HandlerHealthcheck -
+type HandlerHealthcheck struct {
+	App platform.App
+}
+
 // NewHealthcheckHTTPHandler -
 func NewHealthcheckHTTPHandler(r *gin.Engine, app platform.App) {
-	handler := &Handler{
+	handler := &HandlerHealthcheck{
 		App: app,
 	}
 	r.GET("/_health", handler.Healthcheck)
@@ -15,7 +20,7 @@ func NewHealthcheckHTTPHandler(r *gin.Engine, app platform.App) {
 }
 
 // Healthcheck -
-func (a *Handler) Healthcheck(c *gin.Context) {
+func (a *HandlerHealthcheck) Healthcheck(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status": "ok",
 	})
