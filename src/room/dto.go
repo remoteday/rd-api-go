@@ -11,6 +11,7 @@ type DTO struct {
 	ID        uuid.UUID `json:"id,string,omitempty"`
 	Name      string    `json:"name"`
 	Status    string    `json:"status"`
+	TeamID    string    `json:"team_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

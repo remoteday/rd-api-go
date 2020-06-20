@@ -55,7 +55,8 @@ func (h *HandlerTeam) list(c *gin.Context) {
 	response, err := usecase.FindAll(ctx)
 
 	if err != nil {
-		fmt.Print(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": http.StatusInternalServerError})
+		return
 	}
 
 	c.JSON(http.StatusOK, team.ToTeamDTOs(response))
@@ -68,7 +69,7 @@ func (h *HandlerTeam) create(c *gin.Context) {
 	err := c.BindJSON(&teamDto)
 
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error(), "status": http.StatusInternalServerError})
 	}
 
 	response, err := h.App.Usecases.Team.Create(ctx, team.ToTeam(teamDto))

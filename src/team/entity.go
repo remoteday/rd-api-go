@@ -8,9 +8,9 @@ import (
 
 // Team -
 type Team struct {
-	ID        uuid.UUID
-	Name      string
-	Status    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uuid.UUID `db:"id"`
+	Name      string    `db:"name"`
+	Status    string    `db:"status"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }

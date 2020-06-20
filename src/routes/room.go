@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -51,7 +50,8 @@ func (h *HandlerRoom) list(c *gin.Context) {
 	response, err := h.App.Usecases.Room.FindAll(ctx)
 
 	if err != nil {
-		fmt.Print(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": http.StatusInternalServerError})
+		return
 	}
 
 	c.JSON(http.StatusOK, room.ToRoomDTOs(response))
