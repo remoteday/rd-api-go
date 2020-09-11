@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/remoteday/rd-api-go/src/platform"
 	"github.com/remoteday/rd-api-go/src/team"
+	log "github.com/sirupsen/logrus"
 )
 
 // HandlerTeam
@@ -108,7 +109,7 @@ func (h *HandlerTeam) delete(c *gin.Context) {
 	err = h.App.Usecases.Team.Delete(ctx, id)
 
 	if err != nil {
-		fmt.Print(err)
+		log.Error(err)
 	}
 
 	c.JSON(http.StatusNoContent, nil)
