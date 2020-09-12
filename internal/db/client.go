@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/remoteday/rd-api-go/src/config"
+	"github.com/remoteday/rd-api-go/internal/config"
 )
 
 // NewDatabaseConnection -

@@ -23,7 +23,7 @@ coverage.coveralls:
 	./scripts/coverage.sh --coveralls
 
 doc-gen:
-	swag init -o ./src/docs -g ./cmd/api/routes/route.go
+	swag init -o ./internal/docs -g ./cmd/api/routes/route.go
 
 tidy:
 	go mod tidy

@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/remoteday/rd-api-go/src/platform"
-	"github.com/remoteday/rd-api-go/src/room"
+	"github.com/remoteday/rd-api-go/internal/platform"
+	"github.com/remoteday/rd-api-go/internal/room"
 )
 
 // HandlerRoom -

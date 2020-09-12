@@ -2,8 +2,8 @@ package platform
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/remoteday/rd-api-go/src/room"
-	"github.com/remoteday/rd-api-go/src/team"
+	"github.com/remoteday/rd-api-go/internal/room"
+	"github.com/remoteday/rd-api-go/internal/team"
 )
 
 // App -

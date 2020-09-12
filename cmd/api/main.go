@@ -11,9 +11,9 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	"github.com/remoteday/rd-api-go/src/config"
-	"github.com/remoteday/rd-api-go/src/db"
-	"github.com/remoteday/rd-api-go/src/routes"
+	"github.com/remoteday/rd-api-go/internal/config"
+	"github.com/remoteday/rd-api-go/internal/db"
+	"github.com/remoteday/rd-api-go/internal/routes"
 	log "github.com/sirupsen/logrus"
 )
 

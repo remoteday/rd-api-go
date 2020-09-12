@@ -15,9 +15,9 @@ jobs:
 
     #### TEMPLATE_NOTE: go expects specific checkout path representing url
     #### expecting it in the form of
-    ####   /go/src/github.com/circleci/go-tool
-    ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    ####   /go/internal/github.com/circleci/go-tool
+    ####   /go/internal/bitbucket.org/circleci/go-tool
+    working_directory: /go/internal/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - checkout
 

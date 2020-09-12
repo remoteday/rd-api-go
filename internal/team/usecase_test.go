@@ -27,3 +27,22 @@ func TestCanGetByID(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expected, team)
 }
+
+func TestCanFindAll(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	repo := NewMockRepository(ctrl)
+
+	bg := context.Background()
+
+	expected := []Team{{ID: uuid.New(), Name: "test", Status: "active"}}
+
+	repo.EXPECT().FindAll(bg).Return(expected, nil)
+
+	uc := NewTeamUseCase(repo)
+	teams, err := uc.FindAll(bg)
+
+	assert.NoError(t, err)
+	assert.Equal(t, expected, teams)
+}

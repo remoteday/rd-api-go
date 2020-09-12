@@ -12,7 +12,7 @@ import (
 func Migrate(db *sqlx.DB) error {
 	driver, err := postgres.WithInstance(db.DB, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://src/db/migrations",
+		"file://internal/db/migrations",
 		"postgres", driver)
 	if err != nil {
 		return err

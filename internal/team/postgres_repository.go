@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"github.com/remoteday/rd-api-go/src/common"
+	"github.com/remoteday/rd-api-go/internal/common"
 )
 
 // PostgresRepository -

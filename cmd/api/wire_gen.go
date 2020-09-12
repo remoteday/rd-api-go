@@ -6,11 +6,11 @@
 package main
 
 import (
-	"github.com/remoteday/rd-api-go/src/config"
-	"github.com/remoteday/rd-api-go/src/db"
-	"github.com/remoteday/rd-api-go/src/platform"
-	"github.com/remoteday/rd-api-go/src/room"
-	"github.com/remoteday/rd-api-go/src/team"
+	"github.com/remoteday/rd-api-go/internal/config"
+	"github.com/remoteday/rd-api-go/internal/db"
+	"github.com/remoteday/rd-api-go/internal/platform"
+	"github.com/remoteday/rd-api-go/internal/room"
+	"github.com/remoteday/rd-api-go/internal/team"
 )
 
 import (

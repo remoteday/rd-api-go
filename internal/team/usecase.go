@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/remoteday/rd-api-go/src/common"
+	"github.com/remoteday/rd-api-go/internal/common"
 )
 
 // UseCase -
